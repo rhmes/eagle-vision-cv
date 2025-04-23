@@ -1,0 +1,23 @@
+# Requirements for the Computer Vision Project
+# Web framework
+fastapi
+uvicorn
+
+# Vision & ML
+torch==2.0.1           # or use the version that matches your system and CUDA
+torchvision==0.15.2
+opencv-python-headless==4.8.1.78  # stable version without GUI
+numpy==1.24.4          # compatible with PyTorch & OpenCV
+pandas==1.5.3  #
+python-multipart
+
+# Data Processing
+deep_sort_realtime
+scipy
+filterpy
+lap
+
+# Databases
+pymongo
+psycopg2-binary         # PostgreSQL
+

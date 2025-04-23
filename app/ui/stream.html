@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<body>
+    <h1>Live Object Detection</h1>
+    <img src="/video_feed" width="800" />
+    
+    <div id="stats">
+        <strong>Live Count:</strong> <span id="count">0</span><br/>
+        <strong>Detected Objects:</strong>
+        <ul id="object-list"></ul>
+    </div>
+
+    <hr />
+    <h2>Tracked Snapshots (Alerts > 2 min)</h2>
+    <div id="snapshots"></div>
+    <script>
+        // Fetch stats and update the live count and detected objects list
+        async function fetchStats() {
+            try {
+                const res = await fetch('/stats');
+                const data = await res.json();
+    
+                // Update the live count on the page
+                document.getElementById('count').textContent = data.count;
+    
+                const list = document.getElementById('object-list');
+                list.innerHTML = '';  // Clear any existing list
+    
+                // Loop through the objects and display them
+                data.objects.forEach(obj => {
+                    const li = document.createElement('li');
+                    li.textContent = `ID: ${obj.id}, Lifetime: ${obj.lifetime}s`;
+                    list.appendChild(li);
+                });
+            } catch (e) {
+                console.error('Failed to fetch stats', e);
+            }
+        }
+    
+        // Fetch snapshots (with base64 image data) and display them
+        async function fetchSnapshots() {
+            try {
+                const res = await fetch('/snapshot_data');
+                const data = await res.json();
+    
+                const container = document.getElementById('snapshots');
+                container.innerHTML = '';  // Clear previous snapshots
+    
+                // Loop through the snapshots and create elements to display them
+                data.forEach(snap => {
+                    const div = document.createElement('div');
+                    div.style.marginBottom = '20px';
+    
+                    const p1 = document.createElement('p');
+                    p1.innerHTML = `<strong>Track ID:</strong> ${snap.track_id}`;
+                    div.appendChild(p1);
+    
+                    // Ensure snap.image_base64 exists and is a valid string
+                    if (snap.image_base64) {
+                        const img = document.createElement('img');
+                        img.src = `data:image/jpeg;base64,${snap.image_base64}`;
+                        img.width = 200;  // Set the image width to 200px
+                        div.appendChild(img);
+                    }
+    
+                    container.appendChild(div);
+                });
+            } catch (e) {
+                console.error('Failed to fetch snapshots', e);
+            }
+        }
+    
+        // Automatically fetch stats every 500ms and snapshots every 3000ms
+        setInterval(fetchStats, 500);       // Every 500ms (live stats update)
+        setInterval(fetchSnapshots, 3000);  // Every 3 seconds (snapshots)
+    </script>
+    
+    
+</body>
+</html>
+

@@ -1,0 +1,53 @@
+services:
+  web:
+    build: ./app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
+      - ./recordings:/app/recordings
+
+    depends_on:
+      - mongo
+      - postgres
+      - yolo
+    environment:
+      - PYTHONUNBUFFERED=1
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=yoloapp
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
+
+  yolo:
+    build: ./engine
+    volumes:
+      - ./engine:/engine
+    depends_on:
+      - mongo
+      - postgres
+    environment:
+      - PYTHONUNBUFFERED=1
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=yoloapp
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
+
+  postgres:
+    build: ./postgres  # use official image if not customizing
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=yoloapp
+
+  mongo:
+    build: ./mongo  # use image: mongo:6 if not customizing
+    ports:
+      - "27017:27017"
