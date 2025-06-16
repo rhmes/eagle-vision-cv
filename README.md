@@ -39,3 +39,7 @@ Eagle Vision CV is a computer vision project designed to process and analyze off
 ## Results
 Access the results on your browser at: [http://0.0.0.0:8000/video-ui/](http://0.0.0.0:8000/video-ui/)
 
+## TODO
+- Refine tracking configuration to handle detection dropouts
+- Add GPU support for systems with NVIDIA drivers
+- Enhance database integration to efficiently store and manage detection screenshots
